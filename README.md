@@ -1,2 +1,2 @@
-# Advanced-C-
+# Advanced-Cpp
 The game of life
