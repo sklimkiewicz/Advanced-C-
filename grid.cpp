@@ -10,3 +10,23 @@ void Grid::Draw()
         }
     }
 }
+
+void Grid::SetValue(int row, int column, int value){
+    if (IsWithinBounds(row, column)) {
+        cells[row][column] = value;
+    }
+}
+
+int Grid::GetValue(int row, int col) {
+    if (IsWithinBounds(row, col)) {
+        return cells[row][col]
+    }
+    return 0;
+}
+
+bool Grid::IsWithinBounds(int row, int col) {
+    if (row >= 0 && row < rows && col >= 0 && col < cols) {
+        return true;
+    }
+    return false;
+}

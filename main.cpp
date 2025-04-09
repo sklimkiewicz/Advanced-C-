@@ -12,6 +12,10 @@ int main() {
     SetTargetFPS(12);
     
     Grid grid{WINDOW_WIDTH, WINDOW_HEIGHT, CELL_SIZE};
+
+    //Testowe ustawinia kilku komorek
+    grid.SetValue(0, 0, 1);
+    grid.SetValue(2, 1, 1);
     
     while(!WindowShouldClose()) {
         BeginDrawing();
