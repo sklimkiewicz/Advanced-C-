@@ -10,20 +10,36 @@ int main() {
     
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game of Life");
     SetTargetFPS(12);
-    
-    Grid grid{WINDOW_WIDTH, WINDOW_HEIGHT, CELL_SIZE};
 
-    //Testowe ustawinia kilku komorek
-    grid.SetValue(0, 0, 1);
-    grid.SetValue(2, 1, 1);
-    
+    Grid grid{WINDOW_WIDTH, WINDOW_HEIGHT, CELL_SIZE};
+    //losowe wypełnienie siatki
+    grid.FillRandom();
+
     while(!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(GREY);
-        grid.Draw();
-        EndDrawing();
+               // Obsługa zdarzeń
+               if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+                Vector2 mousePosition = GetMousePosition();
+                int row = mousePosition.y / CELL_SIZE;
+                int col = mousePosition.x / CELL_SIZE;
+                grid.ToggleCell(row, col);
+    
     }
     
-    CloseWindow();
-    return 0;
+    if(IsKeyPressed(KEY_C)) {
+        grid.Clear();
+    }
+    
+    if(IsKeyPressed(KEY_R)) {
+        grid.FillRandom();
+    }
+    
+    BeginDrawing();
+    ClearBackground(GREY);
+    grid.Draw();
+    EndDrawing();
+}
+
+CloseWindow();
+return 0;
+
 }
