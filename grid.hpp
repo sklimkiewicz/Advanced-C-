@@ -13,9 +13,14 @@ class Grid
         
         void Draw();
         void SetValue(int row, int column, int vaue);
-        void GetValue(int row, int col);
-        bool IsWithinBounds(int row int col);
-        
+        int GetValue(int row, int col);
+        bool IsWithinBounds(int row, int col);
+        int GetRows() { return rows; }
+        int GetCols() { return cols; }
+        void FillRandom();
+        void Clear();
+        void ToggleCell(int row, int col);
+
     private:
         int rows;
         int cols;
