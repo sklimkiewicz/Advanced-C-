@@ -16,7 +16,7 @@ int main() {
 
     Simulation simulation{ WINDOW_WIDTH,WINDOW_HEIGHT,CELL_SIZE };
 
-    while (!WindowShouldClose()==false) {
+    while (!WindowShouldClose()) {
         // Event handling
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             Vector2 mousePosition = GetMousePosition();
@@ -35,11 +35,11 @@ int main() {
         }
         else if (IsKeyPressed(KEY_F)) {
             FPS += 2;//increase the speed of the simulation
-            SetTarget(FPS);
+            SetTargetFPS(FPS);
         }
         else if (IsKeyPressed(KEY_S)) {
             if (FPS > 5) {
-                FPS -= 2//decresase the speed
+                FPS -= 2;//decresase the speed
                     SetTargetFPS(FPS);
             }
         }

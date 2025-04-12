@@ -77,4 +77,3 @@ void Simulation::CreateRandomState() {
 void Simulation::ToggleCell(int row, int col) {
 	grid.ToggleCell(row, col);
 }
-

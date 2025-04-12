@@ -5,7 +5,7 @@ class Simulation {
 public:
 	Simulation(int width, int height, int cellSize) :
 		grid(width, height, cellSize),
-		run(false) {}
+		run(false), tempGrid(width, height, cellSize) {}
 
 	void Draw();
 	void SetCellValue(int row, int col, int value);
