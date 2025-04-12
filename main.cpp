@@ -8,9 +8,10 @@ int main() {
     const int WINDOW_WIDTH = 750;
     const int WINDOW_HEIGHT = 750;
     const int CELL_SIZE = 25;
+    int FPS = 12;
 
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game of Life");
-    SetTargetFPS(12);
+    SetTargetFPS(FPS);
 
     Simulation simulation{ WINDOW_WIDTH,WINDOW_HEIGHT,CELL_SIZE };
 
@@ -23,15 +24,26 @@ int main() {
             simulation.ToggleCell(row, col);
 
         }
+        if(IsKeyPressed(KEY_ENTER)) {
+            simulation.Start();
+            SetWindowTitle("Game of Life is running...");
+        }
+        else if(IsKeyPressed(KEY_SPACE)) {
+            simulation.Stop();
+            SetWindowTitle("Game of Life has stopped.");
+        }
 
-        if (IsKeyPressed(KEY_C)) {
+        else if (IsKeyPressed(KEY_C)) {
             simulation.ClearGrid();
         }
 
-        if (IsKeyPressed(KEY_R)) {
+        else if (IsKeyPressed(KEY_R)) {
             simulation.CreateRandomState();
         }
-
+        // aktualizacja stanu
+        simulation.Update();
+                
+        // rysowanie
         BeginDrawing();
         ClearBackground(GREY);
         simulation.Draw();
