@@ -2,7 +2,7 @@ CC := g++
 CFLAGS := -Wall -std=c++14 -I. -IC:/raylib/raylib/src -IC:/raylib/raylib/src/external
 LDFLAGS := -LC:/raylib/raylib/src -lraylib -lopengl32 -lgdi32 -lwinmm
 TARGET := ADSK.exe
-SRC := main.cpp ball.cpp 
+SRC := main.cpp grid.cpp simulation.cpp 
 OBJ := $(SRC:.cpp=.o)
 
 all: $(TARGET)
