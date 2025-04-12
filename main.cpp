@@ -2,21 +2,22 @@
 #include <raylib.h>
 #include "grid.hpp"
 #include "simulation.hpp"
+using namespace std;
 
 int main() {
     Color GREY = { 255,255,255,255 };
     const int WINDOW_WIDTH = 750;
     const int WINDOW_HEIGHT = 750;
-    const int CELL_SIZE = 25;
-    int FPS = 12;
+    const int CELL_SIZE = 25;//750/25=30 cells in each row and column
+    int FPS = 12;//12 times per second at most
 
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game of Life");
     SetTargetFPS(FPS);
 
     Simulation simulation{ WINDOW_WIDTH,WINDOW_HEIGHT,CELL_SIZE };
 
-    while (!WindowShouldClose()) {
-        // Obsługa zdarzeń
+    while (!WindowShouldClose()==false) {
+        // Event handling
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             Vector2 mousePosition = GetMousePosition();
             int row = mousePosition.y / CELL_SIZE;
@@ -32,6 +33,16 @@ int main() {
             simulation.Stop();
             SetWindowTitle("Game of Life has stopped.");
         }
+        else if (IsKeyPressed(KEY_F)) {
+            FPS += 2;//increase the speed of the simulation
+            SetTarget(FPS);
+        }
+        else if (IsKeyPressed(KEY_S)) {
+            if (FPS > 5) {
+                FPS -= 2//decresase the speed
+                    SetTargetFPS(FPS);
+            }
+        }
 
         else if (IsKeyPressed(KEY_C)) {
             simulation.ClearGrid();
@@ -40,10 +51,10 @@ int main() {
         else if (IsKeyPressed(KEY_R)) {
             simulation.CreateRandomState();
         }
-        // aktualizacja stanu
+        // state update
         simulation.Update();
                 
-        // rysowanie
+        // drawing objects
         BeginDrawing();
         ClearBackground(GREY);
         simulation.Draw();
