@@ -6,11 +6,11 @@ void Simulation::Draw() {
 	grid.Draw();
 }
 
-void Simulation::SetCellValue(int row, int col, int value) {
-	grid.SetValue(row, col, value);
+void Simulation::SetCellValue(int row, int col, CellState state) {
+	grid.SetValue(row, col, state);
 }
 
-int Simulation::CountLiveNeighbors(int row, int col)
+int Simulation::CountLiveNeighbors(int row, int col) cnst
 {
     int liveNeighbours = 0;
     std::vector<std::pair<int,int>> neighborOffsets = {
@@ -27,7 +27,9 @@ int Simulation::CountLiveNeighbors(int row, int col)
     for(const auto& offset : neighborOffsets) {
         int neighborRow = (row + offset.first + grid.GetRows()) % grid.GetRows();
         int neighborCol = (col + offset.second + grid.GetCols()) % grid.GetCols();
-        liveNeighbours += grid.GetValue(neighborRow, neighborCol);
+        if (grid.GetValue(neighborRow, neighborCol) == CellState::ALIVE) {
+            liveNeighbours++;
+        }
     }
     return liveNeighbours;
 }
@@ -35,30 +37,32 @@ int Simulation::CountLiveNeighbors(int row, int col)
 void Simulation::Update()
 {
     if(IsRunning()) {
+        // Calculate next generation based on Conway's Game of Life rules
         for(int row = 0; row < grid.GetRows(); row++) {
             for(int col = 0; col < grid.GetCols(); col++) {
                 int liveNeighbors = CountLiveNeighbors(row, col); 
-                int cellValue = grid.GetValue(row, col);
-                
-                if(cellValue == 1) {
+                CellState currentState = grid.GetValue(row, col);
+
+                if(currentState == CellState::ALIVE) {
                     // regula 1 i 3: komorka umiera z powodu osamotnienia lub przeludnienia
                     if(liveNeighbors < 2 || liveNeighbors > 3) {
-                        tempGrid.SetValue(row, col, 0);
+                        tempGrid.SetValue(row, col, CellState::DEAD);
                     } else {
                         // regula 2: komorka przeżywa
-                        tempGrid.SetValue(row, col, 1);
+                        tempGrid.SetValue(row, col, CellState::ALIVE);
                     }
                 } else {
                     // regula 4: martwa komorka ożywa
                     if(liveNeighbors == 3) {
-                        tempGrid.SetValue(row, col, 1);
+                        tempGrid.SetValue(row, col, CellState::ALIVE);
                     } else {
-                        tempGrid.SetValue(row, col, 0);
+                        tempGrid.SetValue(row, col, CellState::DEAD);
                     }
                 }
             }
         }
-        grid = tempGrid; // aktualizacja siatki
+        // Update the grid with the new generation
+        grid = tempGrid; 
     }
 }
 
@@ -75,5 +79,15 @@ void Simulation::CreateRandomState() {
 }
 
 void Simulation::ToggleCell(int row, int col) {
-	grid.ToggleCell(row, col);
+    if (!IsRunning()) {
+        grid.ToggleCell(row, col);
+    }
+}
+
+bool Simulation::SaveToFile(const std::string& filename) const {
+    return grid.SaveToFile(filename);
+}
+
+bool Simulation::LoadFromFile(const std::string& filename) {
+    return grid.LoadFromFile(filename);
 }
