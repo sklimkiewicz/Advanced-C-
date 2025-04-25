@@ -20,9 +20,9 @@ class Cell{
     public:
         Cell():state(CellState::DEAD){};
         void SetState(CellState newState) { state = newState; };
-        CellState GetState() { return state; };
+        CellState GetState() const{ return state; };
         void ToggleState() { state = (state == CellState::ALIVE) ? CellState::DEAD : CellState::ALIVE; };
-        bool IsAlive() { return state == CellState::ALIVE; };
+        bool IsAlive() const { return state == CellState::ALIVE; };
     };
 
 
@@ -33,6 +33,7 @@ class Row{
     public:
         Row(int size):cells(size){};
         Cell& operator[](int index){return cells[index];};
+        const Cell& operator[](int index) const { return cells[index]; }
         auto begin() { return cells.begin(); };
         auto end() { return cells.end(); };
         auto begin() const { return cells.begin(); };
