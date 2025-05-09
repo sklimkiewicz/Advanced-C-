@@ -9,8 +9,9 @@ void Grid::Draw()
     for(const auto& row : grid) {
         int colIdx = 0;
         for( const auto& cell : row)
- {
-            Color color = cell.IsAlive() ? Color{0,0,255,255} : Color{0,0,0,255};
+ {          constexpr Color aliveColor{0,0,255,255};
+            constexpr Color deadColor{0,0,0,255};
+            const Color& color = cell.IsAlive() ? aliveColor : deadColor;
             DrawRectangle(colIdx * cellSize, rowIdx * cellSize, cellSize-1, cellSize-1, color);
             colIdx++;
         }
@@ -31,7 +32,7 @@ CellState Grid::GetValue(int row, int col) const{
     return CellState::DEAD; // default to DEAD for out-of-bounds
 }
 
-bool Grid::IsWithinBounds(int row, int col)const {
+bool Grid::IsWithinBounds(int row, int col)const noexcept{
     return (row >= 0 && row < rows && col >= 0 && col < cols);
 }
 
