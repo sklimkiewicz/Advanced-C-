@@ -10,7 +10,7 @@ void Simulation::SetCellValue(int row, int col, CellState state) {
 	grid.SetValue(row, col, state);
 }
 
-int Simulation::CountLiveNeighbors(int row, int col) cnst
+int Simulation::CountLiveNeighbors(int row, int col) const
 {
     int liveNeighbours = 0;
     std::vector<std::pair<int,int>> neighborOffsets = {
