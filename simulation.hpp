@@ -1,31 +1,32 @@
-#pragma once
-#include "grid.hpp"
-#include <string>
+#ifndef SIMULATION_HPP
+#define SIMULATION_HPP
 
+#include "grid.hpp"
+
+// The Simulation class represents the Game of Life simulation.
 class Simulation {
 public:
-	Simulation(int width, int height, int cellSize) :
-		grid(width, height, cellSize),
-		run(false), tempGrid(width, height, cellSize) {}
+    // Constructor: Initializes the simulation with grid dimensions and cell size
+    Simulation(int width, int height, int cellSize);
+    
+    // Updates the grid if the simulation is running
+    void Update();
 
-	void Draw();
-	void SetCellValue(int row, int col, CellState state);
-	int CountLiveNeighbors(int row, int col) const;
-	void Update();
-	bool IsRunning() const { return run; }
-	void Start() { run = true; }
-	void Stop() { run = false; }
-	void ClearGrid();
-	void CreateRandomState();
-	void ToggleCell(int row, int col);
+    // Handles user input to control the simulation (e.g., pause, toggle cells)
+    void HandleInput();
 
-	// File operations
-	bool SaveToFile(const std::string& filename) const;
-	bool LoadFromFile(const std::string& filename);
+    // Toggles the state (alive or dead) of a specific cell in the grid
+    void ToggleCell(int x, int y);
 
+    // Provides access to the grid object for other classes (like Renderer)
+    Grid& GetGrid() { return grid; }
 
 private:
-	Grid grid; // Current state grid
-	Grid tempGrid; // Temporary grid for calculating next state
-	bool run; // Flag indicating if simulation is running
+    // The grid object representing the state of the Game of Life cells
+    Grid grid;
+
+    // Boolean flag indicating whether the simulation is running
+    bool run;
 };
+
+#endif // SIMULATION_HPP
