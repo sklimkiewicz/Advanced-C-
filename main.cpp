@@ -1,12 +1,12 @@
 #include <iostream>
 #include <raylib.h>
 #include <stdexcept>
-#include "grid.hpp"
 #include "simulation.hpp"
+#include "renderer.hpp"
 using namespace std;
 
 int main() {
-    try {
+   
         // Constants and initialization
         const Color GREY = { 255,255,255,255 };
         const int WINDOW_WIDTH = 750;
@@ -14,120 +14,50 @@ int main() {
         const int CELL_SIZE = 25;//750/25=30 cells in each row and column
         int FPS = 12;//12 times per second at most
 
+        // Calculate the number of cells in the grid (rows and columns)
+        const int width = WINDOW_WIDTH / CELL_SIZE;  // Number of cells per row
+        const int height = WINDOW_HEIGHT / CELL_SIZE; // Number of cells per column
+
         // Initialize Raylib window
         InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game of Life");
         SetTargetFPS(FPS);
 
-        // Create simulation
-        Simulation simulation{ WINDOW_WIDTH,WINDOW_HEIGHT,CELL_SIZE };
+        // Create the simulation with the calculated grid dimensions
+        Simulation simulation{ width,height,CELL_SIZE };
+        Renderer renderer(simulation);
+
+          // Fill the grid with random cell states (alive or dead)
+        simulation.GetGrid().FillRandom();
+
+        // Set the frame rate for the game (how many times per second the game updates)
+        SetTargetFPS(10);  // Game speed
 
         // Main game loop
-        while (!WindowShouldClose()) {
-            try {
-                // Event handling
-                if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-                    Vector2 mousePosition = GetMousePosition();
-                    int row = mousePosition.y / CELL_SIZE;
-                    int col = mousePosition.x / CELL_SIZE;
-                    simulation.ToggleCell(row, col);
+        
 
-                }
+    // Main game loop
+    while (!WindowShouldClose()) {
+        // Handle player input (e.g., toggling cells or starting/stopping the simulation)
+        simulation.HandleInput();
 
-                // Key handling
-                if (IsKeyPressed(KEY_ENTER)) {
-                    simulation.Start();
-                    SetWindowTitle("Game of Life is running...");
-                }
-                else if (IsKeyPressed(KEY_SPACE)) {
-                    simulation.Stop();
-                    SetWindowTitle("Game of Life has stopped.");
-                }
-                else if (IsKeyPressed(KEY_F)) {
-                    FPS += 2;//increase the speed of the simulation
-                    SetTargetFPS(FPS);
-                }
-                else if (IsKeyPressed(KEY_S)) {
-                    if (FPS > 5) {
-                        FPS -= 2;//decresase the speed
-                        SetTargetFPS(FPS);
-                    }
-                }
+        // Update the grid based on the current state and rules of the Game of Life
+        simulation.Update();
 
-                else if (IsKeyPressed(KEY_C)) {
-                    simulation.ClearGrid();
-                }
+        // Begin drawing the next frame
+        BeginDrawing();
+        
+        // Clear the screen (set the background to black)
+        ClearBackground(BLACK);
 
-                else if (IsKeyPressed(KEY_R)) {
-                    simulation.CreateRandomState();
-                }
+        // Draw the grid and cells to the screen
+        renderer.Draw();
 
-                // Save/Load functionality with error handling
-                else if (IsKeyPressed(KEY_L)) {
-                    try {
-                        const std::string filename = "game_state.txt";
-                        if (simulation.LoadFromFile(filename)) {
-                            SetWindowTitle("Game state loaded successfully");
-                        }
-                        else {
-                            SetWindowTitle("ERROR: Failed to load game state");
-                        }
-                    }
-                    catch (const std::exception& e) {
-                        SetWindowTitle("ERROR: Failed to load game state");
-                        std::cerr << "Load error: " << e.what() << std::endl;
-                    }
-                }
-                else if (IsKeyPressed(KEY_O)) { // 'O' for save
-                    try {
-                        const std::string filename = "game_state.txt";
-                        if (simulation.SaveToFile(filename)) {
-                            SetWindowTitle("Game state saved successfully");
-                        }
-                        else {
-                            SetWindowTitle("ERROR: Failed to save game state");
-                        }
-                    }
-                    catch (const std::exception& e) {
-                        SetWindowTitle("ERROR: Failed to save game state");
-                        std::cerr << "Save error: " << e.what() << std::endl;
-                    }
-                }
-
-                // state update
-                simulation.Update();
-
-                // drawing objects
-                BeginDrawing();
-                ClearBackground(GREY);
-                simulation.Draw();
-                EndDrawing();
-            }
-            catch (const std::exception& e) {
-                // Handle non-fatal errors that can occur during the loop
-                std::cerr << "Error in main loop: " << e.what() << std::endl;
-                SetWindowTitle("An error occurred in the game loop");
-            }
-            catch (...) {
-                // Catch any other unexpected errors
-                std::cerr << "Unknown error in main loop" << std::endl;
-                SetWindowTitle("An unknown error occurred");
-            }
-
-        }
-
-        CloseWindow();
-        return 0;
-    }
-    catch (const std::exception& e) {
-        // Handle fatal errors during initialization
-        std::cerr << "Critical error: " << e.what() << std::endl;
-        return 1;
-    }
-    catch (...) {
-        // Catch any other unexpected fatal errors
-        std::cerr << "Unknown critical error occurred" << std::endl;
-        return 1;
+        // End drawing the frame
+        EndDrawing();
     }
 
-
+    // Close the window and OpenGL context when the game is over
+    CloseWindow();
+    return 0;
 }
+
