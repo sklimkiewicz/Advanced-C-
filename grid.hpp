@@ -6,11 +6,6 @@
 
 #ifndef GRID_HPP
 #define GRID_HPP
-enum class CellState
-{
-    DEAD = 0,
-    ALIVE = 1
-};
 
 // Enum to represent the possible states of a cell: DEAD or ALIVE
 enum class CellState { DEAD, ALIVE };
@@ -37,7 +32,7 @@ class Grid
         //void Draw();
         void SetValue(int row, int column, CellState state);
         CellState GetValue(int row, int col) const;
-        bool IsWithinBounds(int row, int col) const;
+        bool IsWithinBounds(int row, int col) const noexcept;
         size_t GetRows() const { return rows; }
         size_t GetCols() const { return cols; }
         int GetCellSize() const { return cellSize; }// Get the size of each cell in the grid

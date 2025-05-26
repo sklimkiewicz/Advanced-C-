@@ -27,21 +27,20 @@ bool Grid::IsWithinBounds(int row, int col)const noexcept{
 int Grid::CountNeighbors(int row, int col) const {
     int count = 0;
 
-    // Iterate over all neighboring cells (including diagonals)
+    // Iterate over all 8 neighbors surrounding the cell
     for (int i = -1; i <= 1; ++i) {
         for (int j = -1; j <= 1; ++j) {
-            // Skip the cell itself (i == 0 and j == 0)
+            // Skip the cell itself
             if (i == 0 && j == 0) continue;
 
-            int neighborRow = row + i;
-            int neighborCol = col + j;
+            // Calculate the wrapped neighbor position
+            // Adding rows/cols before modulo ensures no negative indices
+            int neighborRow = (row + i + rows) % rows;
+            int neighborCol = (col + j + cols) % cols;
 
-            // Check if the neighbor is within bounds
-            if (neighborRow >= 0 && neighborRow < rows && neighborCol >= 0 && neighborCol < cols) {
-                // Count the living neighbors
-                if (grid[neighborRow][neighborCol].GetState() == CellState::ALIVE) {
-                    count++;
-                }
+            // Count neighbor if it's alive
+            if (grid[neighborRow][neighborCol].GetState() == CellState::ALIVE) {
+                count++;
             }
         }
     }
@@ -80,11 +79,10 @@ void Grid::Update() {
 
 void Grid::FillRandom()
 {
-    for(int row = 0; row < rows; row++) {
-        for (int col = 0; col < cols; col++) {
-            int randomValue = GetRandomValue(0, 4); // 20% szansa na żywą komórkę
-            grid[row][col].SetState (randomValue == 4 ? CellState::ALIVE : CellState::DEAD);
-
+    for (auto& row : grid) {
+        for (auto& cell : row) {
+            int randomValue = GetRandomValue(0, 4); // 20% szans na ALIVE
+            cell.SetState(randomValue == 4 ? CellState::ALIVE : CellState::DEAD);
         }
     }
 }
