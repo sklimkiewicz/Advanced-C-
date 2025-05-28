@@ -8,15 +8,15 @@ using namespace std;
 int main() {
    
         // Constants and initialization
-        const Color GREY = { 255,255,255,255 };
-        const int WINDOW_WIDTH = 750;
-        const int WINDOW_HEIGHT = 750;
-        const int CELL_SIZE = 25;//750/25=30 cells in each row and column
-        int FPS = 12;//12 times per second at most
+        constexpr Color GREY{ 255,255,255,255 };
+        constexpr int WINDOW_WIDTH{750};
+        constexpr int WINDOW_HEIGHT{750};
+        constexpr int CELL_SIZE{25};//750/25=30 cells in each row and column
+        constexpr int FPS{12};//12 times per second at most
 
         // Calculate the number of cells in the grid (rows and columns)
-        const int width = WINDOW_WIDTH / CELL_SIZE;  // Number of cells per row
-        const int height = WINDOW_HEIGHT / CELL_SIZE; // Number of cells per column
+        const int width{WINDOW_WIDTH / CELL_SIZE};  // Number of cells per row
+        const int height{WINDOW_HEIGHT / CELL_SIZE}; // Number of cells per column
 
         // Initialize Raylib window
         InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game of Life");
