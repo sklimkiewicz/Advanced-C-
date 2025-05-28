@@ -15,19 +15,23 @@ void Simulation::Update() {
 
 // HandleInput method: Handles user input for controlling the simulation
 void Simulation::HandleInput() {
+    auto toggleRunState = [this]() {run=!run;};  // Lambda function to toggle the run state
     // Toggle the simulation state (run/pause) when the Enter key is pressed
     if (IsKeyPressed(KEY_ENTER)) {
-        run = !run;  // If the Enter key is pressed, toggle the run flag
+        toggleRunState;  // Calls the lambda function to toggle the run state
     }
 
-    // Handle toggling of individual cells with a mouse click
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        int mouseX = GetMouseX();  // Get the current mouse X position
-        int mouseY = GetMouseY();  // Get the current mouse Y position
-        int x = mouseX / grid.GetCellSize();  // Calculate the cell's X index based on mouse position
-        int y = mouseY / grid.GetCellSize();  // Calculate the cell's Y index based on mouse position
-        ToggleCell(x, y);  // Toggle the state of the cell at (x, y)
+    auto handleMouseClick = [this](){ 
+        Vector2 mousePos=GetMousePosition();  
+        int x = static_cast<int>(mousePos.x / grid.GetCellSize());  // Calculate the cell's X index based on mouse position
+        int y = static_cast<int>(mousePos.y / grid.GetCellSize());  // Calculate the cell's Y index based on mouse position
+        ToggleCell(x, y);  // Toggle the state of the cell at (x, y) 
+    };
+
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        handleMouseClick();  // Calls the lambda function to handle mouse click
     }
+    
 }
 
 // ToggleCell method: Switches the state (alive or dead) of a specific cell
