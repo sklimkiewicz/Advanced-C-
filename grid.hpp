@@ -28,7 +28,23 @@ class Grid
 { 
     public:
     Grid(int width, int height, int cellSize);
-        
+    // Move constructor
+    Grid(Grid&& other) noexcept 
+        : rows(other.rows), cols(other.cols), 
+          cellSize(other.cellSize),
+          grid(std::move(other.grid)),
+          tempGrid(std::move(other.tempGrid)) {}
+    
+    // Move assignment
+    Grid& operator=(Grid&& other) noexcept {
+        if (this != &other) {
+            rows = other.rows;
+            cols = other.cols;
+            grid = std::move(other.grid);
+            tempGrid = std::move(other.tempGrid);
+        }
+        return *this;
+    }
         //void Draw();
         void SetValue(int row, int column, CellState state);
         CellState GetValue(int row, int col) const;
