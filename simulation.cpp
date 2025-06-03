@@ -18,7 +18,7 @@ void Simulation::HandleInput() {
     auto toggleRunState = [this]() {run=!run;};  // Lambda function to toggle the run state
     // Toggle the simulation state (run/pause) when the Enter key is pressed
     if (IsKeyPressed(KEY_ENTER)) {
-        toggleRunState;  // Calls the lambda function to toggle the run state
+        toggleRunState();  // Calls the lambda function to toggle the run state
     }
 
     auto handleMouseClick = [this](){ 
